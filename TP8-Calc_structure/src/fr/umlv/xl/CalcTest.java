@@ -302,7 +302,7 @@ public class CalcTest {
     assertThrows(IllegalArgumentException.class, () -> Group.cellMatrix(1, 1, 'B', 'A'));
   }
   
-  /*
+  
   // Q7
   
   @Test
@@ -407,5 +407,5 @@ public class CalcTest {
   public void testGroupEvalNull() {
     assertThrows(NullPointerException.class, () -> Group.of("A1").eval(null));
   }
-  */
+  
 }

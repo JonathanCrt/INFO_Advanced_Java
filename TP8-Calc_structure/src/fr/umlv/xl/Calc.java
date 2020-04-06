@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 // V = case type 
@@ -60,16 +63,15 @@ public class Calc<V> {
 		return joiner.toString();
 	}
 	
-	// même type parametre que Calc / interface fonctionelle -> lambda
-	@FunctionalInterface // Avec cette annotation @FunctionalInterface, on indique au compilateur de bien vérifier que l’interface possède bien une seule méthode abstraite.
-	public interface Group<T> { // interface static -> pas le meme type parametree
+
+	@FunctionalInterface // 
+	public interface Group<T> { 
 		
 		public Stream<T> values(); // Renvoi un stream d elts V - methode abstraite
 		
 		@SafeVarargs
 		public static  <E> Group<E> of(E...elts) {
 			var list = List.of(elts); // Fais une copie defensive Transforme le tableau en liste non mutable qui ne contient pas de null 
-			//A calculer avant ! (fais unn requireNonNull) Sinon il est calcule au mauvais moment, 
 			return () -> {
 				return list.stream();
 			};
@@ -87,25 +89,46 @@ public class Calc<V> {
 		
 		/**
 		 * 
-		 * @param <T>
 		 * @param startLine
 		 * @param endLine
 		 * @param startCol
 		 * @param endCol
 		 * @return
 		 */
-		public static <T>  Group<T> cellMatrix(int startLine, int endLine, char startCol, char endCol){
-			var array = new ArrayList<String>();
-			for(var i = startLine ;  i <= endLine; i++) {
-				for(var j =(int )startCol; j <= endCol; j++) {
-					array.add(" " + (char)j + i );
-				}
-				
+		public static  Group<String> cellMatrix(int startLine, int endLine, char startCol, char endCol){
+			if(startLine> endLine || startCol > endCol) {
+				throw new IllegalArgumentException("invalid arguments");
 			}
-			return null;
-			//return Group.of(array);
+			return () -> IntStream.range(startLine, endLine + 1).boxed()
+					.flatMap(
+					line -> IntStream.range(startCol, endCol+1)
+					.mapToObj(e -> ((char) e + "" + line))
+			);
 		}
 		
+		
+		/**
+		 * 
+		 * @param of
+		 * @return
+		 */
+		public default Group<T> ignore(Set<? super T> of) {
+			Objects.requireNonNull(of);
+			return () -> values()
+					    .filter(elt -> !of.contains(elt));
+		}
+		
+		/**
+		 * 
+		 * @param <E>
+		 * @param function
+		 * @return
+		 */
+		public default <E> Stream<E> eval(Function<T, Optional<E>> function) {
+			Objects.requireNonNull(function);
+			return values()
+					.flatMap(elt -> function.apply(elt).stream());
+		}
 		
 	}
 	
