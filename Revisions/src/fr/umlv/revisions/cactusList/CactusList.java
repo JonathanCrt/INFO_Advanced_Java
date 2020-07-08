@@ -17,7 +17,7 @@ public class CactusList<E> implements Iterable<E> {
     }
 
     public void checkIfListIsFrozen() {
-        if(this.isFrozen) {
+        if (this.isFrozen) {
             throw new IllegalStateException();
         }
     }
@@ -26,7 +26,7 @@ public class CactusList<E> implements Iterable<E> {
     public void add(E element) {
         Objects.requireNonNull(element);
 
-        if(element instanceof CactusList) {
+        if (element instanceof CactusList) {
             throw new IllegalArgumentException();
         }
         this.checkIfListIsFrozen();
@@ -34,8 +34,18 @@ public class CactusList<E> implements Iterable<E> {
         this.size++;
     }
 
+    /**
+     * A vérifier : ne contient pas l'élement lui même
+     *
+     * @param cactusList
+     */
     public void addCactus(CactusList<? extends E> cactusList) {
         Objects.requireNonNull(cactusList);
+
+        // Ne pas
+        if(cactusList == this){
+            throw new IllegalStateException();
+        }
 
         cactusList.isFrozen = true;
         this.checkIfListIsFrozen();
@@ -56,24 +66,45 @@ public class CactusList<E> implements Iterable<E> {
         return isFrozen;
     }
 
+    /**
+     * Le cast ne marche pas , que si on sait que l'element que on manipule est exact
+     * Ne marche pas sur els element contenant des List<?>
+     * Traiter séparement les E et CactusList ("Structure à tiroir")
+     * => instance of
+     *
+     * @param consumer
+     */
+    @SuppressWarnings("unchecked")
     public void forEach(Consumer<? super E> consumer) {
         //this.list.forEach(consumer);
-        for(var element: list) {
-            consumer.accept((((E)element)));
+        Objects.requireNonNull(consumer);
+        for (var element : list) {
+            if (element instanceof CactusList) { // forcément un CactusList<E>
+                ((CactusList<E>) element).forEach(consumer);
+            } else {
+                consumer.accept((E) element);
+            }
+
         }
     }
 
+    /**
+
+     * @return
+     */
     @Override
     public String toString() {
+        // foreach et StringJoiner
         return this.list
-                .stream()
+                .stream() // stream de E et de CactusList<E>
+                // flatmap --> Comment transformer une Cactus list en stream
                 .map(Object::toString)
                 .collect(Collectors.joining(", ", "<", ">"));
     }
 
     public static <S> CactusList<S> from(List<S> list) {
         var cactusList = new CactusList<S>();
-        for(var elt: list) {
+        for (var elt : list) {
             cactusList.add(elt);
         }
         cactusList.isFrozen = true;
@@ -94,13 +125,10 @@ public class CactusList<E> implements Iterable<E> {
 
         //System.out.println(s.size());  // prints 4
 
-        for(var s : cactus) {
+        for (var s : cactus) {
             System.out.println(s);  // prints foo then bar then baz then booz
         }
     }
-
-
-
 
 
 }

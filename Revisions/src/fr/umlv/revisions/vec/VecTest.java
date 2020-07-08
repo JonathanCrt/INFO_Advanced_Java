@@ -1,4 +1,4 @@
-package fr.umlv.exam;
+package fr.umlv.revisions.vec;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
@@ -21,8 +21,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-
 
 @SuppressWarnings("static-method")
 public class VecTest {
@@ -70,9 +68,6 @@ public class VecTest {
         assertSame(cmp, mono1.comparator());
     }
 
-    /**
-     * CharSequence et String le comaparator est au dessus
-     */
     @Test
     @Tag("Q1")
     public void testMonoEmptyComparatorSignature() {
@@ -228,16 +223,12 @@ public class VecTest {
         assertTrue(fixed.max().isEmpty());
     }
 
-    /**
-     * Au moment de la création,  on s'entend à ce que le minimum est 1
-     * et le fixed revnoi 0 sans la copie défensive  !
-     */
     @Test
     @Tag("Q4")
     public void testFixedMinChangeAfterCall() {
         var array = List.of(1, 7, 4, 9, 3).toArray(Integer[]::new);
         var fixed = Vec.fixed(Integer::compareTo, array);
-        array[0] = 0; // Attention !
+        array[0] = 0;
         assertEquals(1, fixed.min().orElseThrow());
     }
 
@@ -452,7 +443,8 @@ public class VecTest {
         assertEquals(List.of(2, 3, 5, 8), vec.stream().collect(toList()));
     }
 
-    /*
+
+
     @Test
     @Tag("Q7")
     public void testToMonoFromStreamSimple() {
@@ -712,4 +704,3 @@ public class VecTest {
 
      */
 }
-
