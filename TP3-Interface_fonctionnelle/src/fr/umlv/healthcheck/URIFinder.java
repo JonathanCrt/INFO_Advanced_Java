@@ -14,14 +14,14 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface URIFinder {
 	// implicite abstract
-	public  Optional<URI> find();
+	Optional<URI> find();
 	
 	/**
 	 * build and return Optional of URI Object
 	 * @param s
 	 * @return 
 	 */
-	public static Optional<URI> buildAnURI(String s) {
+	static Optional<URI> buildAnURI(String s) {
 		try {
 			return Optional.of(new URI(s));
 		} catch (URISyntaxException e) {
@@ -34,14 +34,12 @@ public interface URIFinder {
 	 * @param args
 	 * @return
 	 */
-	public static URIFinder fromArguments(String[] args) {
+	static URIFinder fromArguments(String[] args) {
 		Objects.requireNonNull(args);
-		return () -> {
-			return Optional.of(args)
-					.filter(a -> a.length != 0)
-					// Optional de Optional
-					.flatMap(a -> buildAnURI(a[0]));		
-		};
+		return () -> Optional.of(args)
+				.filter(a -> a.length != 0)
+				// Optional de Optional
+				.flatMap(a -> buildAnURI(a[0]));
 	}
 	
 	/**

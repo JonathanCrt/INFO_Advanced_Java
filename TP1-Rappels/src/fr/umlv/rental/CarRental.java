@@ -78,9 +78,10 @@ public class CarRental {
 	 */
 	public Optional<Car> findACarByModel(String model) {
 		Objects.requireNonNull(model);
-		List<Vehicle> car = rental.stream()
-		.filter(x -> x instanceof Car && ((Car) x).getModel().equals(model))
-		.collect(Collectors.toList());
+		List<Vehicle> car = rental
+				.stream()
+				.filter(x -> x instanceof Car && ((Car) x).getModel().equals(model))
+				.toList();
 		
 		if(!car.isEmpty()) {
 			return Optional.of((Car)car.get(0));

@@ -65,7 +65,7 @@ public class RentalTest {
     var rental = new CarRental();
     assertEquals("", rental.toString());
   }
-  
+
   @Test @Tag("Q5")
   public void shouldRemoveCarOfRental() {
     var rental = new CarRental();
@@ -73,13 +73,13 @@ public class RentalTest {
     rental.remove(new Car("ford mustang", 2013));
     assertEquals("", rental.toString());
   }
-  
+
   @Test @Tag("Q5")
   public void shouldGetErrorWhenRemovingANullCar() {
     var rental = new CarRental();
     assertThrows(NullPointerException.class, () -> rental.remove(null));
   }
-  
+
   @Test @Tag("Q5")
   public void shouldEqualsAndHashCodeCorrectlyWritten() {
     var set = new HashSet<Car>();
@@ -89,10 +89,10 @@ public class RentalTest {
   }
   @Test @Tag("Q5")
   public void shouldEqualsTestStringsUsingEquals() {
-  	var rental = new CarRental();
-  	rental.add(new Car("ford mustang", 2017));
-  	rental.remove(new Car(new String("ford mustang"), 2017));
-  	assertEquals("", rental.toString());
+    var rental = new CarRental();
+    rental.add(new Car("ford mustang", 2017));
+    rental.remove(new Car(new String("ford mustang"), 2017));
+    assertEquals("", rental.toString());
   }
   
   @Test @Tag("Q7")
