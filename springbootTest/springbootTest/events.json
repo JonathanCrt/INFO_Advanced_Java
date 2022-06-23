@@ -1,0 +1,17 @@
+{
+    "name": "Exposition couleurs",
+    "tag": "Exposition",
+    "date": "22-09-2022",
+    "address": {
+        "country": "France",
+        "postcode": 34000,
+        "city": "Montpellier"
+    },
+    "createdAt": "",
+    "coordinates": [
+        43.82,
+        15.20
+    ],
+    "isVisible": true,
+    "priority": 3.00
+}
